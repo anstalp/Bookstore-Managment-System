@@ -15,6 +15,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import static org.aspectj.weaver.tools.cache.SimpleCacheFactory.path;
+
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -33,7 +35,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
-        if (request.getServletPath().contains("/api/v1/auth")) {
+        if (request.getServletPath().contains("/api/v1/auth") || path.equals("/api/v1/register")) {
+            System.out.println("Bypassing JWT filter for path: " + path);
             filterChain.doFilter(request, response);
             return;
         }
