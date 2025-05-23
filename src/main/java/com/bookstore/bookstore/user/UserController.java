@@ -1,7 +1,7 @@
 package com.bookstore.bookstore.user;
 
-import com.bookstore.bookstore.user.dto.LoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
@@ -43,16 +43,9 @@ public class UserController {
         userService.updateUser(userId, name, email);
     }
 
-//    @PostMapping("/login")
-//    public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) {
-//        Optional<User> user = userService.loginUser(loginRequest.getEmail(), loginRequest.getPassword());
-//
-//        if (user.isPresent()) {
-//            return ResponseEntity.ok(user.get());
-//        } else {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
-//        }
-//    }
-
+    @GetMapping("/me")
+    public User getCurrentUser(@AuthenticationPrincipal User user) {
+        return user;
+    }
 
 }

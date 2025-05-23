@@ -1,7 +1,9 @@
 package com.bookstore.bookstore.book;
 
+import com.bookstore.bookstore.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +27,7 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Book> findById(@PathVariable Integer id) {
+    public ResponseEntity<Book> findById(@PathVariable Long id) {
         return service.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -38,7 +40,7 @@ public class BookController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateStock(
-            @PathVariable Integer id,
+            @PathVariable Long id,
             @RequestParam("stock") Integer newStock
     ) {
         service.updateStock(id, newStock);
@@ -46,9 +48,26 @@ public class BookController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Integer id) {
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/{id}/average-rating")
+    public ResponseEntity<Double> getAverageRating(@PathVariable Long id) {
+        return ResponseEntity.ok(service.calculateAverageRating(id));
+    }
+
+    @PostMapping("/{id}/rate")
+    public ResponseEntity<?> rateBook(
+            @PathVariable Long id,
+            @AuthenticationPrincipal User user, // Απαιτεί ρύθμιση Spring Security
+            @RequestParam Integer rating
+    ) {
+        service.savePersonalRating(id, user, rating);
+        return ResponseEntity.ok().build();
+    }
+
+
 
 }

@@ -17,10 +17,13 @@ public class Book {
 
     @Id
     @GeneratedValue
-    private Integer id;
+    private Long id;
     private String title;
     private String author;
     private String isbn;
     private Integer stock;
     private LocalDate releaseDate;
+    private Float price;
+    @Transient
+    private Double averageRating;
 }
