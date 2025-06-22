@@ -14,7 +14,7 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")  // επιτρέπουμε όλα τα endpoints
-                        .allowedOrigins("http://localhost:3000") // frontend origin
+                        .allowedOrigins("https://bookstore-managment-system.netlify.app/") // frontend origin
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
