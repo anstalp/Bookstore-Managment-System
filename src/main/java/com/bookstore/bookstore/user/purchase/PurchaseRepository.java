@@ -8,5 +8,7 @@ import java.util.List;
 @Repository
 public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
     List<Purchase> findByUserId(Long userId);
+
+    void deleteByUserIdAndBookId(Long userId, Long bookId);
 }
 

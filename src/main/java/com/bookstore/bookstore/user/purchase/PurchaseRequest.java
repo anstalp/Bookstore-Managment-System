@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PurchaseRequest {
+    private Long customerId;
     private Long bookId;
     private Integer quantity;
 }

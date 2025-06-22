@@ -4,6 +4,8 @@ import com.bookstore.bookstore.book.Book;
 import com.bookstore.bookstore.book.BookRepository;
 import com.bookstore.bookstore.user.User;
 import com.bookstore.bookstore.user.UserRepository;
+import com.bookstore.bookstore.user.UserRole;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,11 +21,25 @@ public class PurchaseService {
     private final BookRepository bookRepository;
 
     @Transactional
-    public void createPurchase(Long userId, Long bookId, Integer quantity) {
-        User user = userRepository.findById(userId).orElseThrow();
-        Book book = bookRepository.findById(bookId).orElseThrow();
+    public void createPurchase(Long customerId, Long bookId, Integer quantity, User authenticatedUser) {
 
-        // Ενημέρωση stock
+        if (authenticatedUser.getRole() != UserRole.CUSTOMER) {
+
+            if (customerId == null) {
+                throw new IllegalArgumentException("πρέπει να επιλέξεις πελάτη");
+            }
+        } else {
+            // Ο πελάτης αγοράζει μόνο για τον εαυτό του
+            customerId = authenticatedUser.getId();
+        }
+
+        User customer = userRepository.findById(customerId)
+                .orElseThrow(() -> new EntityNotFoundException("Δεν βρέθηκε πελάτης"));
+
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("Δεν βρέθηκε βιβλίο"));
+
+
         if (book.getStock() < quantity) {
             throw new RuntimeException("Δεν υπάρχει αρκετό stock");
         }
@@ -32,7 +48,7 @@ public class PurchaseService {
 
         // Δημιουργία αγοράς
         Purchase purchase = Purchase.builder()
-                .user(user)
+                .user(customer)
                 .book(book)
                 .quantity(quantity)
                 .totalPrice((double) (book.getPrice() * quantity))
@@ -41,11 +57,15 @@ public class PurchaseService {
         purchaseRepository.save(purchase);
     }
 
+    @Transactional
+    public void deletePurchaseByUserAndBook(Long userId, Long bookId) {
+        purchaseRepository.deleteByUserIdAndBookId(userId, bookId);
+    }
 
     public List<PurchaseResponse> getUserPurchases(Long userId) {
         return purchaseRepository.findByUserId(userId).stream()
                 .map(purchase -> new PurchaseResponse(
-                        purchase.getId(),
+                        purchase.getBook().getId(),
                         purchase.getBook().getTitle(),
                         purchase.getBook().getAuthor(),
                         purchase.getQuantity(),
@@ -54,6 +74,5 @@ public class PurchaseService {
                 ))
                 .collect(Collectors.toList());
     }
-
 
 }

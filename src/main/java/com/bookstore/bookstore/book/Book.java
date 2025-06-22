@@ -7,6 +7,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.bookstore.bookstore.user.favorite.Favorite;
+import com.bookstore.bookstore.user.purchase.Purchase;
+import com.bookstore.bookstore.user.rating.UserRating;
+
 
 @Data
 @Builder
@@ -26,4 +33,5 @@ public class Book {
     private Float price;
     @Transient
     private Double averageRating;
+
 }

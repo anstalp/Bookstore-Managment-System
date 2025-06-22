@@ -1,5 +1,8 @@
 package com.bookstore.bookstore.user;
 
+import com.bookstore.bookstore.user.purchase.Purchase;
+import com.bookstore.bookstore.user.purchase.PurchaseResponse;
+import com.bookstore.bookstore.user.purchase.PurchaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +17,12 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
+    private final PurchaseService purchaseService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, PurchaseService purchaseService) {
         this.userService = userService;
+        this.purchaseService = purchaseService;
     }
 
     @GetMapping
@@ -47,5 +52,16 @@ public class UserController {
     public User getCurrentUser(@AuthenticationPrincipal User user) {
         return user;
     }
+
+    @GetMapping("/{userId}/purchases")
+    public ResponseEntity<List<PurchaseResponse>> getUserPurchases(@PathVariable Long userId) {
+        return ResponseEntity.ok(purchaseService.getUserPurchases(userId));
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<User> getUserById(@PathVariable Long userId) {
+        return ResponseEntity.ok(userService.getUserById(userId));
+    }
+
 
 }

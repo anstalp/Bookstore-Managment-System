@@ -42,4 +42,11 @@ public class FavoriteController {
     ) {
         return ResponseEntity.ok(favoriteService.getUserFavorites(user.getId()));
     }
+
+    @GetMapping("/user/{userId}")
+    @PreAuthorize("hasRole('EMPLOYEE')")
+    public ResponseEntity<List<Book>> getUserFavorites(@PathVariable Long userId) {
+        return ResponseEntity.ok(favoriteService.getUserFavorites(userId));
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.bookstore.bookstore.book;
 
 import com.bookstore.bookstore.user.User;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,6 +15,11 @@ import java.util.List;
 public class BookController {
 
     private final BookService service;
+
+    @Data
+    public static class StockUpdateRequest {
+        private Integer stock;
+    }
 
     @PostMapping
     public ResponseEntity<?> save(@RequestBody BookRequest request) {
@@ -41,9 +47,9 @@ public class BookController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateStock(
             @PathVariable Long id,
-            @RequestParam("stock") Integer newStock
+            @RequestBody StockUpdateRequest request
     ) {
-        service.updateStock(id, newStock);
+        service.updateStock(id, request.getStock());
         return ResponseEntity.ok().build();
     }
 
@@ -61,7 +67,7 @@ public class BookController {
     @PostMapping("/{id}/rate")
     public ResponseEntity<?> rateBook(
             @PathVariable Long id,
-            @AuthenticationPrincipal User user, // Απαιτεί ρύθμιση Spring Security
+            @AuthenticationPrincipal User user,
             @RequestParam Integer rating
     ) {
         service.savePersonalRating(id, user, rating);
