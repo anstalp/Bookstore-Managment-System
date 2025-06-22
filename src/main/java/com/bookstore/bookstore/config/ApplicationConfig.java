@@ -15,7 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 
-
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
