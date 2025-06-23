@@ -45,13 +45,6 @@
 ## Τεχνολογίες  
 - Java & Spring Boot  
 - PostgreSQL  
-- JWT Authentication  
-- Lombok  
-
-## Εκκίνηση  
-1. Κλωνοποιήστε το αποθετήριο  
-2. Ρυθμίστε και εκκινήστε τη βάση PostgreSQL  
-3. Εκτελέστε την εφαρμογή (`mvn spring-boot:run` ή μέσω IDE)  
-4. Χρησιμοποιήστε τα API endpoints για διαχείριση χρηστών και αποθέματος  
+- JWT Authentication
 
 ---
