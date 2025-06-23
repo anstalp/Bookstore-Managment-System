@@ -38,7 +38,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
-        if (request.getServletPath().contains("/api/v1/auth") || path.equals("/api/v1/register")) {
+        String path = request.getServletPath();
+        if (path.startsWith("/api/v1/auth") || path.equals("/api/v1/register")) {
             System.out.println("Bypassing JWT filter for path: " + path);
             filterChain.doFilter(request, response);
             return;
